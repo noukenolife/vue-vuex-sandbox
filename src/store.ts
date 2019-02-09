@@ -1,16 +1,25 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
+import {IDynamicModuleState} from "@/modules/DynamicModule";
+import StaticModule, {IStaticModuleState} from "@/modules/StaticModule";
+import VuexPersistence from "vuex-persist";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
+interface IState {
+  dynamicModule: IDynamicModuleState;
+  staticModule: IStaticModuleState;
+}
 
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  },
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage,
 });
+
+const store = new Vuex.Store<IState>({
+  modules: {
+    staticModule: StaticModule,
+  },
+  plugins: [vuexLocal.plugin],
+});
+
+export default store;
